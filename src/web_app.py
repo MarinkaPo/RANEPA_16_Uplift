@@ -85,7 +85,7 @@ pipeline_bar.markdown(
     \n**3. Ручной выбор клиентов для отправки рекламы:**
 	\nВ этом блоке студент:
 	\nа) вручную выберет группу клиентов для отправки новой рекламы;
-	\nб) оценит рентабельность своего выбра;
+	\nб) оценит рентабельность своего выбора;
 	\nв) проанализирует метрики качества по своему решению.
 	\nС использованием библиотек  [pandas](https://pandas.pydata.org/docs/user_guide/index.html), [scikit-uplift](https://www.uplift-modeling.com/en/latest/api/index.html), [plotly](https://plotly.com/python-api-reference/index.html);
 	\n**4. Работа с моделями машинного обучения для uplift-моделирования этой же задачи:**

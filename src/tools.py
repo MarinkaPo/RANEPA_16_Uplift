@@ -6,7 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklift.datasets import fetch_hillstrom
 from sklift.metrics import uplift_at_k, uplift_by_percentile, weighted_average_uplift
 from sklift.viz import plot_uplift_by_percentile
-from catboost import CatBoostClassifier
+from 
+ import CatBoostClassifier
 import sklearn
 import streamlit as st
 import plotly.express as px
@@ -458,6 +459,7 @@ def get_history_plot(data):
 		showlegend=True,
 		legend_orientation="h",
 		legend=dict(x=.66, y=.99, title='Новый клиент'),
+		yaxis_range=[1900, 2023],
 		margin=dict(l=20, r=10, t=80, b=10),
 		hovermode="x",
 		bargap=0.3
