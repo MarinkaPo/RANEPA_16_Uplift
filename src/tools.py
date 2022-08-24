@@ -6,8 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklift.datasets import fetch_hillstrom
 from sklift.metrics import uplift_at_k, uplift_by_percentile, weighted_average_uplift
 from sklift.viz import plot_uplift_by_percentile
-from 
- import CatBoostClassifier
+from catboost import CatBoostClassifier
 import sklearn
 import streamlit as st
 import plotly.express as px
@@ -474,3 +473,8 @@ def get_history_plot(data):
 	)
 
 	return fig
+
+def compute_profit_spend_cost(communication_cost, total_budget, ):
+	pass
+
+

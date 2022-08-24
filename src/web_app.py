@@ -1,6 +1,8 @@
+import numpy as np
 import streamlit as st
 from PIL import Image
 import plotly.graph_objects as go
+import plotly.express as px
 
 import pandas as pd
 import os
@@ -186,7 +188,7 @@ target_train = target.loc[target_train_index['0']]
 target_test = target.loc[target_test_index['0']]
 
 
-refresh = st.button('Обновить и показать выборку')
+refresh = st.button('Обновить и показать выборку', key='button1')
 title_subsample = data_train.sample(7)
 if refresh:
 	title_subsample = data_train.sample(7)
@@ -498,7 +500,7 @@ with st.form(key='filter-clients'):
 	filters['recency'] = recency
 
 	st.write('Если известно на какой процент аудитории необходимо повлиять, измените значение')
-	k = st.slider(label='Процент аудитории', min_value=1, max_value=100, value=100)
+	target_volume = st.slider(label='Процент аудитории', min_value=1, max_value=100, value=100)
 	# k = k/100-0.0001
 
 	filter_form_submit_button = st.form_submit_button('Применить фильтр')
@@ -555,7 +557,7 @@ with st.expander(label='Посмотреть пример пользовател
 #------------------------------------------------------------------#
 with st.expander('Результаты ручной фильтрации', expanded=True):
 	# считаем метрики для пользователя
-	user_metric_uplift_at_k = uplift_at_k(target_filtered, uplift, treatment_filtered, strategy='overall', k=k)
+	user_metric_uplift_at_k = uplift_at_k(target_filtered, uplift, treatment_filtered, strategy='overall', k=target_volume)
 	user_metric_uplift_by_percentile = uplift_by_percentile(target_filtered, uplift, treatment_filtered)
 	user_metric_qini_auc_score = qini_auc_score(target_filtered, uplift, treatment_filtered)
 	user_metric_weighted_average_uplift = tools.get_weighted_average_uplift(target_filtered, uplift, treatment_filtered)
@@ -563,7 +565,7 @@ with st.expander('Результаты ручной фильтрации', expan
 	uplift_curve_user_score = uplift_curve(target_filtered, uplift, treatment_filtered)
 	# отображаем метрики
 	col1, col2, col3 = st.columns(3)
-	col1.metric(label=f'Uplift для {k}% пользователей', value=f'{user_metric_uplift_at_k:.4f}') # int(round(k*100, 0)
+	col1.metric(label=f'Uplift для {target_volume}% пользователей', value=f'{user_metric_uplift_at_k:.4f}') # int(round(k*100, 0)
 	col2.metric(label=f'Qini AUC score', value=f'{user_metric_qini_auc_score:.4f}', help='Всегда будет 0 для пользователя')
 	col3.metric(label=f'Weighted average uplift', value=f'{user_metric_weighted_average_uplift:.4f}')
 
@@ -611,7 +613,7 @@ with st.expander('Решение с помощью CatBoost'):
 		final_uplift = sm_cbc.loc[filtered_dataset.index]['0']
 
 		# считаем метрики для ML
-		catboost_uplift_at_k = uplift_at_k(target_filtered, final_uplift, treatment_filtered, strategy='overall', k=k)
+		catboost_uplift_at_k = uplift_at_k(target_filtered, final_uplift, treatment_filtered, strategy='overall', k=target_volume)
 		catboost_uplift_by_percentile = uplift_by_percentile(target_filtered, final_uplift, treatment_filtered)
 		catboost_qini_auc_score = qini_auc_score(target_filtered, final_uplift, treatment_filtered)
 		catboost_weighted_average_uplift = tools.get_weighted_average_uplift(target_filtered, final_uplift, treatment_filtered)
@@ -619,7 +621,7 @@ with st.expander('Решение с помощью CatBoost'):
 		# отображаем метрики
 		col1, col2, col3 = st.columns(3)
 		col1.metric(
-			label=f'Uplift для {k}% пользователей',
+			label=f'Uplift для {target_volume}% пользователей',
 			value=f'{catboost_uplift_at_k:.4f}',
 			delta=f'{catboost_uplift_at_k - user_metric_uplift_at_k:.4f}'
 		)
@@ -698,7 +700,7 @@ with st.expander('Решение с помощью Random forest (sklearn)'):
 		final_rf_uplift = tm_rfc.loc[filtered_dataset.index]['0']
 
 		# считаем метрики для ML
-		random_forest_uplift_at_k = uplift_at_k(target_filtered, final_rf_uplift, treatment_filtered, strategy='overall', k=k)
+		random_forest_uplift_at_k = uplift_at_k(target_filtered, final_rf_uplift, treatment_filtered, strategy='overall', k=target_volume)
 		random_forest_uplift_by_percentile = uplift_by_percentile(target_filtered, final_rf_uplift, treatment_filtered)
 		random_forest_qini_auc_score = qini_auc_score(target_filtered, final_rf_uplift, treatment_filtered)
 		random_forest_weighted_average_uplift = tools.get_weighted_average_uplift(target_filtered, final_rf_uplift, treatment_filtered)
@@ -706,7 +708,7 @@ with st.expander('Решение с помощью Random forest (sklearn)'):
 		# отображаем метрики
 		col1, col2, col3 = st.columns(3)
 		col1.metric(
-			label=f'Uplift для {k}% пользователей',
+			label=f'Uplift для {target_volume}% пользователей',
 			value=f'{random_forest_uplift_at_k:.4f}',
 			delta=f'{random_forest_uplift_at_k - user_metric_uplift_at_k:.4f}'
 		)
@@ -774,6 +776,7 @@ with st.expander('Решение с помощью Random forest (sklearn)'):
 		uplift_fig.ax_.legend(loc=u'upper left', bbox_to_anchor=(0.75, 0.25))
 		st.plotly_chart(uplift_fig.figure_, use_container_width=True)
 		# st.pyplot(uplift_fig.figure_)
+		print('some')
 
 with st.expander('Решение с помощью XGBoost'):
 	with st.form(key='xgboost_metricks'):
@@ -781,7 +784,7 @@ with st.expander('Решение с помощью XGBoost'):
 		final_xgboost_uplift = sm_xgboost.loc[filtered_dataset.index]['0']
 
 		# считаем метрики для ML
-		xgboost_uplift_at_k = uplift_at_k(target_filtered, final_xgboost_uplift, treatment_filtered, strategy='overall', k=k)
+		xgboost_uplift_at_k = uplift_at_k(target_filtered, final_xgboost_uplift, treatment_filtered, strategy='overall', k=target_volume)
 		xgboost_uplift_by_percentile = uplift_by_percentile(target_filtered, final_xgboost_uplift, treatment_filtered)
 		xgboost_qini_auc_score = qini_auc_score(target_filtered, final_xgboost_uplift, treatment_filtered)
 		xgboost_weighted_average_uplift = tools.get_weighted_average_uplift(target_filtered, final_xgboost_uplift, treatment_filtered)
@@ -789,7 +792,7 @@ with st.expander('Решение с помощью XGBoost'):
 		# отображаем метрики
 		col1, col2, col3 = st.columns(3)
 		col1.metric(
-			label=f'Uplift для {k}% пользователей',
+			label=f'Uplift для {target_volume}% пользователей',
 			value=f'{xgboost_uplift_at_k:.4f}',
 			delta=f'{xgboost_uplift_at_k - user_metric_uplift_at_k:.4f}'
 		)
@@ -856,3 +859,42 @@ with st.expander('Решение с помощью XGBoost'):
 		uplift_fig.ax_.legend(loc=u'upper left', bbox_to_anchor=(0.75, 0.25))
 		st.plotly_chart(uplift_fig.figure_, use_container_width=True)
 		# st.pyplot(uplift_fig.figure_)
+
+# random forest
+communication_cost = st.slider(label='Цена коммуникации в центах', min_value=0, max_value=200, value=1, step=1) / 100
+total_budget = st.slider(label='Бюджет на рекламу', min_value=0, max_value=10000, value=100, step=1)
+target_volume = total_budget / (communication_cost * 100)
+
+treatment_mask = (treatment_test == 1)
+rfc_treatment = tm_rfc[treatment_mask]
+
+number_top_targets = int(len(rfc_treatment) * target_volume / 100)
+
+sorted_uplift = rfc_treatment.sort_values('0', ascending=False)
+
+top_uplift_index = sorted_uplift[:number_top_targets].index
+
+top_uplift_data = data_test.loc[top_uplift_index]
+
+total_treatment_cost = communication_cost * number_top_targets
+total_treatment_spend = top_uplift_data['spend'].sum()
+
+total_profit = total_treatment_spend - total_treatment_cost
+
+st.write(number_top_targets)
+st.write(total_treatment_cost)
+st.write(total_treatment_spend)
+st.write(total_profit)
+
+cost_com_tensor = np.linspace(0, 2, 100)
+total_cost_tensor = cost_com_tensor * number_top_targets
+profit_com_tensor = total_treatment_spend - total_cost_tensor
+
+
+# profit_com_tensor, total_cost_tensor = tools.compute_profit_spend_cost(communication_cost, target_volume)
+
+fig = px.line(x=cost_com_tensor, y=total_treatment_spend * np.ones(1000), title='elasticity')
+fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor)
+fig.add_scatter(x=cost_com_tensor, y=profit_com_tensor)
+st.plotly_chart(fig)
+
