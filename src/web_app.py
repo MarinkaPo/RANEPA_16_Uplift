@@ -862,39 +862,53 @@ with st.expander('Решение с помощью XGBoost'):
 
 # random forest
 communication_cost = st.slider(label='Цена коммуникации в центах', min_value=0, max_value=200, value=1, step=1) / 100
-total_budget = st.slider(label='Бюджет на рекламу', min_value=0, max_value=10000, value=100, step=1)
-target_volume = total_budget / (communication_cost * 100)
+total_budget = st.slider(label='Бюджет на рекламу', min_value=100, max_value=2000, value=100, step=1)
+# target_volume = total_budget / (communication_cost * 100)
 
 treatment_mask = (treatment_test == 1)
 rfc_treatment = tm_rfc[treatment_mask]
 
-number_top_targets = int(len(rfc_treatment) * target_volume / 100)
+# number_top_targets = int(len(rfc_treatment) * target_volume / 100)
 
 sorted_uplift = rfc_treatment.sort_values('0', ascending=False)
 
-top_uplift_index = sorted_uplift[:number_top_targets].index
+# top_uplift_index = sorted_uplift[:number_top_targets].index
 
-top_uplift_data = data_test.loc[top_uplift_index]
+# top_uplift_data = data_test.loc[top_uplift_index]
 
-total_treatment_cost = communication_cost * number_top_targets
-total_treatment_spend = top_uplift_data['spend'].sum()
+# total_treatment_cost = communication_cost * number_top_targets
+# total_treatment_spend = top_uplift_data['spend'].sum()
 
-total_profit = total_treatment_spend - total_treatment_cost
+# total_profit = total_treatment_spend - total_treatment_cost
 
-st.write(number_top_targets)
-st.write(total_treatment_cost)
-st.write(total_treatment_spend)
-st.write(total_profit)
+# st.write(number_top_targets)
+# st.write(total_treatment_cost)
+# st.write(total_treatment_spend)
+# st.write(total_profit)
 
-cost_com_tensor = np.linspace(0, 2, 100)
-total_cost_tensor = cost_com_tensor * number_top_targets
-profit_com_tensor = total_treatment_spend - total_cost_tensor
+cost_com_tensor = np.linspace(0.1, 2, 100)
+spend_com_tensor = np.linspace(0.1, 2, 100)
+total_cost_tensor = np.linspace(0.1, 2, 100)
+
+volume_tensor = total_budget / cost_com_tensor
+for i, (target_volume, communication_cost) in enumerate(zip(volume_tensor, cost_com_tensor)):
+	# number_top_targets = int(len(rfc_treatment) * target_volume / 100)
+	number_top_targets = int(target_volume)
+	top_uplift_index = sorted_uplift[:number_top_targets].index
+	top_uplift_data = data_test.loc[top_uplift_index]
+	total_treatment_cost = communication_cost * number_top_targets
+	total_treatment_spend = top_uplift_data['spend'].sum()
+	spend_com_tensor[i] = total_treatment_spend
+	total_cost_tensor[i] = total_treatment_cost
+
+# total_cost_tensor = cost_com_tensor * number_top_targets
+profit_com_tensor = spend_com_tensor - total_cost_tensor
 
 
 # profit_com_tensor, total_cost_tensor = tools.compute_profit_spend_cost(communication_cost, target_volume)
 
-fig = px.line(x=cost_com_tensor, y=total_treatment_spend * np.ones(1000), title='elasticity')
+fig = px.line(x=cost_com_tensor, y=profit_com_tensor, title='elasticity')
 fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor)
-fig.add_scatter(x=cost_com_tensor, y=profit_com_tensor)
+fig.add_scatter(x=cost_com_tensor, y=spend_com_tensor)
 st.plotly_chart(fig)
 
