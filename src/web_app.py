@@ -21,11 +21,11 @@ ADD_IMG_PATH = 'additional files'
 # print(os.listdir())
 # ---------------------Header---------------------
 st.markdown('''<h1 style='text-align: center; color: #000000;'
-            >Uplift-моделирование</h1>''', 
+            >Выбор рациональной маркетинговой стратегии с использованием uplift-моделирования</h1>''', 
             unsafe_allow_html=True)
-st.markdown('''<h3 style='text-align: center; color: #f98e4a;'
-            >(uplift modeling laboratory work)</h3>''', 
-            unsafe_allow_html=True)
+# st.markdown('''<h3 style='text-align: center; color: #f98e4a;'
+#             >(uplift modeling laboratory work)</h3>''', 
+#             unsafe_allow_html=True)
 			
 add_img_file = os.path.join(ADD_IMG_PATH, 'uplift_title_pic.jpg')
 title_image = Image.open(add_img_file)
@@ -56,6 +56,26 @@ st.write("""
 \n*Ссылка на источник данных:* [_The MineThatData E-Mail Analytics And Data Mining Challenge_](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html)""")
 
 st.markdown('''<h2 style='text-align: left; color: black;'
+            >Актуальность тематики</h2>''', 
+            unsafe_allow_html=True)
+st.write(""" \n##### **Кому будет полезна эта лабораторная работа и почему?**
+\n* **Студентам управленческих специальностей:**
+\nВо время выполнения лабораторной работы вы "примерите" на себя роль руководителя маркетингового направления, произведёте анализ имеющихся данных о клиентах, 
+оцените возможность применения новой стратегии, исходя из имеющегося бюджета.
+\n* **Студентам маркетинговых направлений:**
+\nИз теоритического блока вы узнаете об uplift-моделировании, как одном из популярных методов выбора клиентов для коммуникации. Попробуете применять разные 
+модели для uplift-моделирования, а также оцените рентабельность рекламной кампании, в зависимости от стоимости коммуникации с клиентом.
+\n* **Студентам направления аналитики и консалтинга:**
+\nПервые два блока лабораторной работы посвящены самостоятельному анализу и отбору клиентов для рекламной коммуникации. Используя графический анализ данных 
+и сводные таблицы вы сделаете заключение о ваших клиентах и их реакции на прошлую рекламную кампанию.
+\n* **Студентам финансовых и экономических специальностей:**
+\nДанная лабораторная работа даёт базовые знания о возможностях коммуникаций бизнеса с клиентами. Общее понимание данной темы помогает контроллировать распределение бюджета компании, включая маркетинговые расходы.
+\n* **Студентам других специальностей:**
+\nДля общего понимания тематики маркетинговых исследований.
+""")
+
+
+st.markdown('''<h2 style='text-align: left; color: black;'
             >Задача:</h2>''', 
             unsafe_allow_html=True)
 st.write(""" \nПредставьте, что вы - руководитель маркетингового направления в крупной российской компании. Вы работаете с широкой аудиторией, 
@@ -69,7 +89,9 @@ st.write(""" \nПредставьте, что вы - руководитель м
 \nДанные подготовили сотрудники ЛИА РАНХиГС.
 """)
 #-------------------------Pipeline & Info description-------------------------
-st.markdown('#### *Общий пайплайн и информация*')
+st.markdown('''<h2 style='text-align: left; color: black;'
+            >Этапы разработки кейса</h2>''', 
+            unsafe_allow_html=True)
 add_img_file = os.path.join(ADD_IMG_PATH, 'Uplift_pipeline.png')
 img_pipeline = Image.open(add_img_file) 
 st.image(img_pipeline, use_column_width='auto', caption='Схема (пайплайн) лабораторной работы') #width=450
@@ -860,9 +882,14 @@ with st.expander('Решение с помощью XGBoost'):
 		st.plotly_chart(uplift_fig.figure_, use_container_width=True)
 		# st.pyplot(uplift_fig.figure_)
 
+
+#-----------------------------БЛОК 3-----------------------------#
+st.markdown('''<h2 style='text-align: center; color: 'black'
+            >Блок 4: Подбор стратегии исходя из бюджета</h2>''', 
+            unsafe_allow_html=True)
 # random forest
-communication_cost = st.slider(label='Цена коммуникации в центах', min_value=0, max_value=200, value=1, step=1) / 100
-total_budget = st.slider(label='Бюджет на рекламу', min_value=100, max_value=2000, value=100, step=1)
+communication_cost = st.slider(label='Цена коммуникации в центах:', min_value=0, max_value=200, value=1, step=1) / 100
+total_budget = st.slider(label='Бюджет на рекламу:', min_value=100, max_value=2000, value=100, step=1)
 # target_volume = total_budget / (communication_cost * 100)
 
 treatment_mask = (treatment_test == 1)
@@ -902,13 +929,41 @@ for i, (target_volume, communication_cost) in enumerate(zip(volume_tensor, cost_
 	total_cost_tensor[i] = total_treatment_cost
 
 # total_cost_tensor = cost_com_tensor * number_top_targets
-profit_com_tensor = spend_com_tensor - total_cost_tensor
+profit_com_tensor = spend_com_tensor - total_cost_tensor #
 
 
 # profit_com_tensor, total_cost_tensor = tools.compute_profit_spend_cost(communication_cost, target_volume)
 
-fig = px.line(x=cost_com_tensor, y=profit_com_tensor, title='elasticity')
-fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor)
-fig.add_scatter(x=cost_com_tensor, y=spend_com_tensor)
+fig = px.line(title='Кривая эластичности') # x=cost_com_tensor, y=profit_com_tensor, labels='cost_com_tensor|profit_com_tensor', 
+fig.add_scatter(x=cost_com_tensor, y=profit_com_tensor,hovertext='Зависимость прибыли от цены коммуникации', name='Зависимость прибыли от цены коммуникаци', line_color='green')
+fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor, hovertext='Зависимость стоимости коммуникаций от цены коммуникации', name='Зависимость стоимости коммуникаций от цены коммуникации', line_color='red') # trace1
+fig.add_scatter(x=cost_com_tensor, y=spend_com_tensor, hovertext='Зависимость дохода от цены коммуникации', name='Зависимость дохода от цены коммуникации', line_color='orange')
+# fig.update_traces(cells_line_color='black')
+fig.update_xaxes(title='Цена коммуникации в долларах',
+                automargin = True,
+                categoryorder='total ascending', # 'total descending'
+                range=[0, 2],
+                tickvals=np.linspace(0,2,21), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
+                # tickangle =270,
+                # tickfont = dict(size=10)
+                )
+fig.update_yaxes(title='Сумма',
+                automargin = True,
+                categoryorder='total ascending', # 'total descending'
+                range=[-500, 8000],
+                tickvals=np.linspace(-500,8000,18), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
+                # tickangle =270,
+                # tickfont = dict(size=10)
+                )				
+fig.update_layout(showlegend=True,
+				legend=dict(
+							yanchor="top",
+							y=0.99,
+							xanchor="right",
+							x=0.99
+							),
+				autosize=True,
+	# width=800, height=400, margin=dict(b=2, l=0, r=0, t=2)
+	) # bottom, left, right и top - отступы     title='Наша таблица', title_x=0.5, title_y=1,
 st.plotly_chart(fig)
 

@@ -47,11 +47,11 @@ def get_pivot_table(dataset, target, treatment):
 	# группируем все колонки по целевой колонке - "targ", она же visit клиентом сайта - агрегируем по счёту и среднему значению:
 	groupped_table = df.groupby(['history_segment', 'zip_code', 'mens', 'womens', 'newbie', 'treat'])['targ'].agg(['count', 'mean']).reset_index()
 	# считаем разницу средних значений там, между теми строками, где воздействие было оказано и где не было:
-	diff = groupped_table[groupped_table['treat'] == 1]['mean'].values - groupped_table[groupped_table['treat'] == 0]['mean'].values 
+	diff = groupped_table.loc[groupped_table['treat'] == 1]['mean'].values - groupped_table[groupped_table['treat'] == 0]['mean'].values # было без .loc
 	# оставляем только там, где было воздействие:
-	pivot_table = groupped_table[groupped_table['treat'] == 1] 
+	pivot_table = groupped_table.loc[groupped_table['treat'] == 1].copy(deep=False)  # groupped_table[groupped_table['treat'] == 1] 
 	# добавляем o:
-	pivot_table['diff'] = diff
+	pivot_table['diff'] = diff.tolist() # pivot_table['diff'] = diff
 	# groupped_table['diff'] = diff
 
 	# new_out['№'] = new_out.index
