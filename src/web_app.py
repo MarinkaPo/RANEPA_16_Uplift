@@ -15,6 +15,20 @@ import catboost
 import tools
 ADD_IMG_PATH = 'additional files'
 
+with st.sidebar:
+    st.markdown(''' # Содержание:''')
+
+    st.markdown("## [1. Актуальность тематики](#about)", unsafe_allow_html=True) # https://i.imgur.com/iIOA6kU.png
+    st.markdown("## [2. Задача](#task)", unsafe_allow_html=True)
+    st.markdown("## [3. Этапы разработки кейса](#pipeline)", unsafe_allow_html=True)
+    st.markdown("## [4. Информация о датасете](#data)", unsafe_allow_html=True)
+    st.markdown("## [5. Блок 1: Анализ выборки](#analyze)", unsafe_allow_html=True)
+    st.markdown("## [6. Блок 2: Самостоятельный выбор клиентов для отправки рекламы](#student_choise)", unsafe_allow_html=True)
+    st.markdown("## [7. Блок 3: Подбор стратегии с помощью ML](#ml_models)", unsafe_allow_html=True)
+    st.markdown("## [8. Блок 4: Подбор стратегии, исходя из бюджета](#sreategy_budget)", unsafe_allow_html=True)
+
+#-----------------------------------------------------#
+
 
 # print(os.listdir())
 # # os.chdir('../')
@@ -49,15 +63,14 @@ st.write("""
 \nЦель uplift-моделирования - оценить чистый эффект от коммуникации, выбрать тех клиентов, которые совершат целевое действие только при специальном 
 взаимодействии с ними, а также рассчитать рациональность такого взаимодействия. 
 
-\nЛаборатрная работа состоит из **3х блоков**: 
+\nЛаборатрная работа состоит из **4х блоков**: 
 \n* **Анализ данных:** анализ выборки с помощью методов визуализации;
 \n* **Ручной выбор клиентов для отправки рекламы:** вам будет предложено самостоятельно выбрать те группы клиентов, которым будет отправлена реклама. В конце этого блока надо будет найти такую выборку клиентов, чтобы рекламная кампания была прибыльной;
-\n* **Выбор клиентов для отправки рекламы с помощью моделей машинного обучения:** вы посмотрите, как с этой же задачей справляются модели машинного обучения.
+\n* **Выбор клиентов для отправки рекламы с помощью моделей машинного обучения:** вы посмотрите, как с этой же задачей справляются модели машинного обучения и сравните со своим решением.
+\n* **Подбор стратегии, исходя из бюджета и цены на рекламу:** найдя точку безубыточности, вы выберете наиболее рациональный путь расходования бюджета.
 \n*Ссылка на источник данных:* [_The MineThatData E-Mail Analytics And Data Mining Challenge_](https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html)""")
 
-st.markdown('''<h2 style='text-align: left; color: black;'
-            >Актуальность тематики</h2>''', 
-            unsafe_allow_html=True)
+st.header('Актуальность тематики', anchor='about') 
 st.write(""" \n##### **Кому будет полезна эта лабораторная работа и почему?**
 \n* **Студентам управленческих специальностей:**
 \nВо время выполнения лабораторной работы вы "примерите" на себя роль руководителя маркетингового направления, произведёте анализ имеющихся данных о клиентах, 
@@ -75,9 +88,7 @@ st.write(""" \n##### **Кому будет полезна эта лаборат�
 """)
 
 
-st.markdown('''<h2 style='text-align: left; color: black;'
-            >Задача:</h2>''', 
-            unsafe_allow_html=True)
+st.header('Задача:', anchor='task') 
 st.write(""" \nПредставьте, что вы - руководитель маркетингового направления в крупной российской компании. Вы работаете с широкой аудиторией, 
 предлагаете покупателям скидки, запускает акции и предложения.
 
@@ -89,9 +100,7 @@ st.write(""" \nПредставьте, что вы - руководитель м
 \nДанные подготовили сотрудники ЛИА РАНХиГС.
 """)
 #-------------------------Pipeline & Info description-------------------------
-st.markdown('''<h2 style='text-align: left; color: black;'
-            >Этапы разработки кейса</h2>''', 
-            unsafe_allow_html=True)
+st.header('Этапы разработки кейса', anchor='pipeline')
 add_img_file = os.path.join(ADD_IMG_PATH, 'Uplift_pipeline.png')
 img_pipeline = Image.open(add_img_file) 
 st.image(img_pipeline, use_column_width='auto', caption='Схема (пайплайн) лабораторной работы') #width=450
@@ -162,10 +171,7 @@ info_bar.markdown('''\n**1.** Клиент, который **отреагиру�
 ''')
 
 #-----------------------------БЛОК Информации-----------------------------#
-st.markdown('''<h2 style='text-align: center; color: 'black'
-            >Информация о датасете</h2>''', 
-            unsafe_allow_html=True)
-	
+st.header('Информация о датасете', anchor='data')	
 st.markdown("""Наш набор данных содержит 42 693 строки с данными клиентов, которые в последний раз совершали покупки в течение двенадцати месяцев.
 
 Из данных уже отделена тестовая выборка в виде 30% записей клиентов, так что данных в предоставленной выборке будет меньше.
@@ -220,7 +226,7 @@ fig = go.Figure(data=[go.Table(
                                 columnwidth = [0.9,1.8,1,1,1.1,1.5,1,1.3,0.9], # *len(title_subsample.columns),
                                 header=dict(values=list(title_subsample.columns),
                                             line_color='black',
-                                            fill_color='lightgray',
+                                            fill_color='#d9d9d9',
                                             align=['center']*len(title_subsample.columns),
                                             font=dict(color='black', size=14),
                                             height=30),                                            
@@ -255,9 +261,7 @@ st.markdown(
 	)
 
 #-----------------------------БЛОК 1 АНАЛИЗ ДАННЫХ-----------------------------#
-st.markdown('''<h2 style='text-align: center; color: 'black'
-            >Блок 1: Анализ выборки</h2>''', 
-            unsafe_allow_html=True)
+st.header('Блок 1: Анализ выборки', anchor='analyze')
 st.markdown('''#### Задание по Блоку 1:
 \nДля того, чтобы лучше понять на какую аудиторию следует запустить новую рекламную кампанию, проведите небольшой анализ данных, используя графики ниже и отвечая на вопросы по ним.''')
 # with st.expander('Развернуть блок анализа данных'):
@@ -441,7 +445,7 @@ with st.expander('Вопрос 8: примените фильтры для ан�
 											columnwidth = [1,1,0.5,0.6,0.6,0.5,0.5,0.6,0.6], # *len(title_subsample.columns),
 											header=dict(values=list(pivot_table.columns),
 														line_color='black',
-														fill_color=['lightgray', 'lightgray','lightgray','lightgray','lightgray','lightgray','lightgray','lightgray','#ef553b'],
+														fill_color=['#d9d9d9', '#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#ef553b'],
 														align=['center']*len(pivot_table.columns),
 														font=dict(color='black', size=14),
 														height=30),                                            
@@ -460,11 +464,9 @@ with st.expander('Вопрос 8: примените фильтры для ан�
 
 
 #-----------------------------БЛОК 2 РУЧНАЯ ФИЛЬТРАЦИЯ-----------------------------#
-filters = {}
-st.markdown('''<h2 style='text-align: center; color: 'black'
-            >Блок 2: Самостоятельный выбор клиентов для отправки рекламы</h2>''', 
-            unsafe_allow_html=True)
+st.header('Блок 2: Самостоятельный выбор клиентов для отправки рекламы', anchor='student_choise')
 st.markdown('''Примените фильтры ниже для того, чтобы вручную отобрать клиентов, которые попадут в маркетинговую акцию''')
+filters = {}
 with st.form(key='filter-clients'):
 	st.markdown('''##### *Кому отправить рекламу?*''')
 
@@ -558,7 +560,7 @@ with st.expander(label='Посмотреть пример пользовател
                                 columnwidth = [1,1.7,1,1,1,1.2,1,1.3,1], # *len(example.columns),
                                 header=dict(values=list(example.columns),
                                             line_color='black',
-                                            fill_color='lightgray',
+                                            fill_color='#d9d9d9',
                                             align=['center']*len(example.columns),
                                             font=dict(color='black', size=14),
                                             height=30),                                            
@@ -607,7 +609,7 @@ with st.expander('Результаты ручной фильтрации', expan
                                 columnwidth = [1,1,1,2,2,1], # *len(example.columns),
                                 header=dict(values=list(uplift_percentile_table.columns),
                                             line_color='black',
-                                            fill_color='lightgray',
+                                            fill_color='#d9d9d9',
                                             align=['center']*len(uplift_percentile_table.columns),
                                             font=dict(color='black', size=14),
                                             height=30),                                            
@@ -623,10 +625,24 @@ with st.expander('Результаты ручной фильтрации', expan
 	# st.write(user_metric_uplift_by_percentile)
 	
 
-#-----------------------------БЛОК 3-----------------------------#
-st.markdown('''<h2 style='text-align: center; color: 'black'
-            >Блок 3: Подбор стратегии с помощью ML</h2>''', 
-            unsafe_allow_html=True)
+# #-----------------------------БЛОК 3-----------------------------#
+st.header('Блок 3: Подбор стратегии с помощью ML', anchor='ml_models')
+st.markdown('''#### Задание по Блоку 3:
+\nВ этом задании вы сравните свой отбор клиентов из предыдущего блока с тем, как это делают модели машинного обучения: CatBoost, RandomForestClassifier и XGBoost.
+\n##### *Как это делать?*
+\nПеред вами внизу три раскрывающихся вкладки. Открыв каждую, вы увидите график, сравнивающий работу соответствующей модели машинного обучения по отбору клиенов, и ваш самостоятельный выбор из Блока 2.
+\nНа каждом из графике будет отображено по 3 элемента:
+\n1. Синяя AUC-кривая - это график зависимости дохода от рекламной кампании (ось Y) от количества клиентов, получивших рекламу (ось X), которую выявила соответствующая модель машинного обучения;
+\n2. Красная точка ("Analitic qini") - это результат вашего ручного отбора из из Блока 2: точка указывает, какой доход (ось Y) вы получите, если отправите рекламу всем клиентам, которых выбрали вручную (их количество - по оси X);
+\n3. Оранжевая диагональная прямая ("Random") обозначает решение задачи по отбору клиентов методом случайного выбора.
+\n##### *Как это понимать?*
+\nКонечно, не всегда бОльшие раходы на рекламу означают бОльшую прибыль после неё. И, естественно, нам надо найти оптимальное соотношение между расходами на кампанию (количество клиентов, что получат реклау, ось X) и доходом от этого (ось Y).
+\n**Для этого, оцените зависимость "доходы-количество клиентов, получивших рекламу" на пиках AUC-кривой и сделайте соответствующие выводы по работе каждой модели.**
+\nЕщё несколько моментов:
+\n1. Если ваша точка ручного отбора ("Analitic qini") лежит *выше* синей AUC-кривой - то это тот редкий случай, когда ручной выбор аналитика сработал лучше математической модели;
+\n2. Если точка "Analitic qini" лежит *между* синей AUC-кривой и оранжевой прямой - это значит, что вы отобрали клиентов лучше, чем случаный отбор, но хуже, чем модель машинного обучения;
+\n3. Если же она располжена *ниже*, чем прямая "Random", то ваши критерии выбора клиентов совсем не оптимальны и даже хуже, чем определение их через подбрасывание монетки.
+''')
 # show_ml_reasons = st.checkbox('Показать решения с помощью ML')
 # if show_ml_reasons:
 with st.expander('Решение с помощью CatBoost'):
@@ -672,7 +688,7 @@ with st.expander('Решение с помощью CatBoost'):
 									columnwidth = [1,1,1,2,2,1], # *len(example.columns),
 									header=dict(values=list(catboost_percentile_table.columns),
 												line_color='black',
-												fill_color='lightgray',
+												fill_color='#d9d9d9',
 												align=['center']*len(catboost_percentile_table.columns),
 												font=dict(color='black', size=14),
 												height=30),                                            
@@ -716,7 +732,7 @@ with st.expander('Решение с помощью CatBoost'):
 		st.plotly_chart(uplift_fig.figure_, use_container_width=True)
 		# st.pyplot(uplift_fig.figure_)
 
-with st.expander('Решение с помощью Random forest (sklearn)'):
+with st.expander('Решение с помощью RandomForestClassifier'):
 	with st.form(key='sklearn_metricks'):
 
 		final_rf_uplift = tm_rfc.loc[filtered_dataset.index]['0']
@@ -758,7 +774,7 @@ with st.expander('Решение с помощью Random forest (sklearn)'):
 									columnwidth = [1,1,1,2,2,1], # *len(example.columns),
 									header=dict(values=list(random_forest_percentile_table.columns),
 												line_color='black',
-												fill_color='lightgray',
+												fill_color='#d9d9d9',
 												align=['center']*len(random_forest_percentile_table.columns),
 												font=dict(color='black', size=14),
 												height=30),                                            
@@ -842,7 +858,7 @@ with st.expander('Решение с помощью XGBoost'):
 									columnwidth = [1,1,1,2,2,1], # *len(example.columns),
 									header=dict(values=list(xgboost_percentile_table.columns),
 												line_color='black',
-												fill_color='lightgray',
+												fill_color='#d9d9d9',
 												align=['center']*len(xgboost_percentile_table.columns),
 												font=dict(color='black', size=14),
 												height=30),                                            
@@ -883,87 +899,103 @@ with st.expander('Решение с помощью XGBoost'):
 		# st.pyplot(uplift_fig.figure_)
 
 
-#-----------------------------БЛОК 3-----------------------------#
-st.markdown('''<h2 style='text-align: center; color: 'black'
-            >Блок 4: Подбор стратегии исходя из бюджета</h2>''', 
-            unsafe_allow_html=True)
-# random forest
-communication_cost = st.slider(label='Цена коммуникации в центах:', min_value=0, max_value=200, value=1, step=1) / 100
-total_budget = st.slider(label='Бюджет на рекламу:', min_value=100, max_value=2000, value=100, step=1)
-# target_volume = total_budget / (communication_cost * 100)
+#-----------------------------БЛОК 4-----------------------------#
+st.header('Блок 4: Подбор стратегии исходя из бюджета', anchor='sreategy_budget')
+st.markdown('''#### Задание по Блоку 4:
+\nВ данном задании отбирать клиентов для отправки рекламы будет модель из Блока 3 - RandomForestClassifier.
+\nА вы, выбирая цену коммуникации и общий бюджет на рекламу, ответьте на следующие вопросы:
+\n1. Как зависят прибыль рекламной кампании от дохода после её проведения?
+\n2. Где на графике находится т.н. "точка безубыточности"?
+\n3. При общем рекламном бюджете в 2000 долларов, на какую максимальную цену за коммуникацию вы можете согласиться, чтобы общая рекламная кампания не была убыточной?
+\n4. Если стоимосить отправки рекламы клиенту равна 90 центов, будет ли рационально потратить на рекламу 510 долларов? 1150 долларов? 1700 долларов?
+''')
+with st.form(key='sreategy_budget'):
+	st.markdown('''##### *Условия для графика эластичности:*''')
+	# random forest
+	communication_cost = st.slider(label='Цена коммуникации в центах:', min_value=0, max_value=200, value=1, step=1) / 100
+	total_budget = st.slider(label='Бюджет на рекламу в долларах:', min_value=100, max_value=2000, value=100, step=1)
+	# target_volume = total_budget / (communication_cost * 100)
 
-treatment_mask = (treatment_test == 1)
-rfc_treatment = tm_rfc[treatment_mask]
+	treatment_mask = (treatment_test == 1)
+	rfc_treatment = tm_rfc[treatment_mask]
 
-# number_top_targets = int(len(rfc_treatment) * target_volume / 100)
-
-sorted_uplift = rfc_treatment.sort_values('0', ascending=False)
-
-# top_uplift_index = sorted_uplift[:number_top_targets].index
-
-# top_uplift_data = data_test.loc[top_uplift_index]
-
-# total_treatment_cost = communication_cost * number_top_targets
-# total_treatment_spend = top_uplift_data['spend'].sum()
-
-# total_profit = total_treatment_spend - total_treatment_cost
-
-# st.write(number_top_targets)
-# st.write(total_treatment_cost)
-# st.write(total_treatment_spend)
-# st.write(total_profit)
-
-cost_com_tensor = np.linspace(0.1, 2, 100)
-spend_com_tensor = np.linspace(0.1, 2, 100)
-total_cost_tensor = np.linspace(0.1, 2, 100)
-
-volume_tensor = total_budget / cost_com_tensor
-for i, (target_volume, communication_cost) in enumerate(zip(volume_tensor, cost_com_tensor)):
 	# number_top_targets = int(len(rfc_treatment) * target_volume / 100)
-	number_top_targets = int(target_volume)
-	top_uplift_index = sorted_uplift[:number_top_targets].index
-	top_uplift_data = data_test.loc[top_uplift_index]
-	total_treatment_cost = communication_cost * number_top_targets
-	total_treatment_spend = top_uplift_data['spend'].sum()
-	spend_com_tensor[i] = total_treatment_spend
-	total_cost_tensor[i] = total_treatment_cost
 
-# total_cost_tensor = cost_com_tensor * number_top_targets
-profit_com_tensor = spend_com_tensor - total_cost_tensor #
+	sorted_uplift = rfc_treatment.sort_values('0', ascending=False)
+
+	# top_uplift_index = sorted_uplift[:number_top_targets].index
+
+	# top_uplift_data = data_test.loc[top_uplift_index]
+
+	# total_treatment_cost = communication_cost * number_top_targets
+	# total_treatment_spend = top_uplift_data['spend'].sum()
+
+	# total_profit = total_treatment_spend - total_treatment_cost
+
+	# st.write(number_top_targets)
+	# st.write(total_treatment_cost)
+	# st.write(total_treatment_spend)
+	# st.write(total_profit)
+
+	cost_com_tensor = np.linspace(0.1, 2, 100)
+	spend_com_tensor = np.linspace(0.1, 2, 100)
+	total_cost_tensor = np.linspace(0.1, 2, 100)
+	if st.form_submit_button('Построить график'):
+		volume_tensor = total_budget / cost_com_tensor
+		for i, (target_volume, communication_cost) in enumerate(zip(volume_tensor, cost_com_tensor)):
+			# number_top_targets = int(len(rfc_treatment) * target_volume / 100)
+			number_top_targets = int(target_volume)
+			top_uplift_index = sorted_uplift[:number_top_targets].index
+			top_uplift_data = data_test.loc[top_uplift_index]
+			total_treatment_cost = communication_cost * number_top_targets
+			total_treatment_spend = top_uplift_data['spend'].sum()
+			spend_com_tensor[i] = total_treatment_spend
+			total_cost_tensor[i] = total_treatment_cost
+
+		# total_cost_tensor = cost_com_tensor * number_top_targets
+		profit_com_tensor = spend_com_tensor - total_cost_tensor #
 
 
-# profit_com_tensor, total_cost_tensor = tools.compute_profit_spend_cost(communication_cost, target_volume)
+		# profit_com_tensor, total_cost_tensor = tools.compute_profit_spend_cost(communication_cost, target_volume)
 
-fig = px.line(title='Кривая эластичности') # x=cost_com_tensor, y=profit_com_tensor, labels='cost_com_tensor|profit_com_tensor', 
-fig.add_scatter(x=cost_com_tensor, y=profit_com_tensor,hovertext='Зависимость прибыли от цены коммуникации', name='Зависимость прибыли от цены коммуникаци', line_color='green')
-fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor, hovertext='Зависимость стоимости коммуникаций от цены коммуникации', name='Зависимость стоимости коммуникаций от цены коммуникации', line_color='red') # trace1
-fig.add_scatter(x=cost_com_tensor, y=spend_com_tensor, hovertext='Зависимость дохода от цены коммуникации', name='Зависимость дохода от цены коммуникации', line_color='orange')
-# fig.update_traces(cells_line_color='black')
-fig.update_xaxes(title='Цена коммуникации в долларах',
-                automargin = True,
-                categoryorder='total ascending', # 'total descending'
-                range=[0, 2],
-                tickvals=np.linspace(0,2,21), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
-                # tickangle =270,
-                # tickfont = dict(size=10)
-                )
-fig.update_yaxes(title='Сумма',
-                automargin = True,
-                categoryorder='total ascending', # 'total descending'
-                range=[-500, 8000],
-                tickvals=np.linspace(-500,8000,18), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
-                # tickangle =270,
-                # tickfont = dict(size=10)
-                )				
-fig.update_layout(showlegend=True,
-				legend=dict(
-							yanchor="top",
-							y=0.99,
-							xanchor="right",
-							x=0.99
-							),
-				autosize=True,
-	# width=800, height=400, margin=dict(b=2, l=0, r=0, t=2)
-	) # bottom, left, right и top - отступы     title='Наша таблица', title_x=0.5, title_y=1,
-st.plotly_chart(fig)
+		fig = px.line(title='Кривая эластичности') # x=cost_com_tensor, y=profit_com_tensor, labels='cost_com_tensor|profit_com_tensor', 
+		fig.add_scatter(x=cost_com_tensor, y=spend_com_tensor, hovertext='Зависимость дохода от цены коммуникации', hovertemplate="Реклама: %{x}$ Доход: %{y}$",  name='Зависимость дохода от цены коммуникации', line_color='orange') # round(float(cost_com_tensor[0]),2)
+		fig.add_scatter(x=cost_com_tensor, y=profit_com_tensor, hovertext='Зависимость прибыли от цены коммуникаци', hovertemplate="Реклама: %{x}$ Прибыль: %{y}$", name='Зависимость прибыли от цены коммуникаци', line_color='green', hoverinfo="x+y") # hovertext='Зависимость прибыли от цены коммуникации',
+		fig.add_scatter(x=cost_com_tensor, y=total_cost_tensor, hovertext='Бюджет на рекламу', hovertemplate="Потраченый бюджет: %{y}$", name='Потраченый бюджет', line_color='red') # trace1
+		# fig.update_traces(cells_line_color='black')
+		fig.update_xaxes(title='Цена коммуникации в долларах',
+						automargin = True,
+						categoryorder='total ascending', # 'total descending'
+						range=[0, 2],
+						tickvals=np.linspace(0,2,21), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
+						autorange = True,
+						# tickangle =270,
+						# tickfont = dict(size=10)
+						)
+		fig.update_yaxes(title='Сумма в долларах',
+						automargin = True,
+						categoryorder='total ascending', # 'total descending'
+						tickmode='linear',
+						tick0=0,
+						dtick=1000,
+						autorange = True,
+						# nticks=10,
+						# range=[-500, 8000],
+						# tickvals=np.linspace(-500,8000,18), #int(year) for year in docs_from_year.keys()], # if docs_from_year.keys().index(year)/10==0],
+						# tickangle =270,
+						# tickfont = dict(size=10)
+						)				
+
+		fig.update_layout(showlegend=True,
+						legend=dict(
+									yanchor="top",
+									y=0.99,
+									xanchor="right",
+									x=0.99
+									),
+						# legend_traceorder="reversed",
+						autosize=True,
+			width=670, height=400, margin=dict(b=0, l=0, r=1, t=23),
+			) # bottom, left, right и top - отступы     title='Наша таблица', title_x=0.5, title_y=1,
+		st.plotly_chart(fig)
 
