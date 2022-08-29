@@ -41,7 +41,7 @@ st.markdown('''<h1 style='text-align: center; color: #000000;'
 #             >(uplift modeling laboratory work)</h3>''', 
 #             unsafe_allow_html=True)
 			
-add_img_file = os.path.join(ADD_IMG_PATH, 'uplift_title_pic.jpg')
+add_img_file = os.path.join(ADD_IMG_PATH, 'uplift_title_pic_rus.jpg')
 title_image = Image.open(add_img_file)
 st.image(title_image, use_column_width='auto') # use_column_width='auto') #width=450
 
